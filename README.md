@@ -1,2 +1,2 @@
-# consolui
+# ConsolUI
 Terminal Graphic Framework 
