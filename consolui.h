@@ -1,5 +1,3 @@
-#include "debugmalloc.h"
-
 #include <windows.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -12,12 +10,6 @@
 // **************************************************
 
 #define CUI_ANSI_CHAR_ESC		0x1B
-
-//Felt proof (might delete later)
-//#define ANSI_FORM_RSET		"\x1B[0m"
-//#define ANSI_FORM_BOLD_SET	"\x1B[1m"
-//#define ANSI_FORM_UNDL_SET	"\x1B[4m"
-//#define ANSI_FORM_BOLD_RST	"\x1B[22m"
 
 //ANSI codes for text styles
 
