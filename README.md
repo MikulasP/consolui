@@ -1,2 +1,2 @@
 # ConsolUI
-Terminal Graphic Framework 
+Terminal Graphic Framework ((Very) Early dev.)
