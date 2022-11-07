@@ -149,20 +149,6 @@ void PrintUI(char* text) {
     printf(text);
 }
 
-//
-void CALLBACK HandleWinEvent(HWINEVENTHOOK hook, DWORD event, HWND hwnd, LONG idObject, LONG idChild, DWORD dwEventThread, DWORD dwmsEventTime) {
-    SMALL_RECT rect = {0, 0, 0, 0};
-    rect.Top = rect.Left = 0;
-    rect.Bottom = 30;
-    rect.Right = 120;
-    SetConsoleWindowInfo(CreateConsoleScreenBuffer(GENERIC_READ, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL), TRUE, &rect);
-}
-
-//
-void PreventResizeUI() {
-    HWINEVENTHOOK resizeEventHook = SetWinEventHook(EVENT_CONSOLE_LAYOUT, EVENT_CONSOLE_LAYOUT, NULL, HandleWinEvent, 0, 0, WINEVENT_INCONTEXT);
-}
-
 // **************************************************
 // |	Visual elements								|
 // **************************************************
