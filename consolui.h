@@ -1,4 +1,30 @@
+/*
+MIT License
+
+Copyright (c) 2023 Mikulas Peter
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+*/
+
 #include <windows.h>
+#include <conio.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -110,34 +136,6 @@ void GetCaretPosUI(uint16_t* x, uint16_t* y, CONSOLE_SCREEN_BUFFER_INFO* screenI
 //**************************************************
 
 /**
-*	Move cursor up by <val> lines
-*
-*	@param <unsigned int>val							Value to move cursor
-*/
-///< void MoveCaretUpUI(size_t val);
-
-/**
-*	Move cursor down by <val> lines
-*
-*	@param <unsigned int>val							Value to move cursor
-*/
-///< void MoveCaretDownUI(size_t val);
-
-/**
-*	Move cursor right by <val> lines
-*
-*	@param <unsigned int>val							Value to move cursor
-*/
-///< void MoveCaretRight(size_t val);
-
-/**
-*	Move cursor left by <val> lines
-*
-*	@param <unsigned int>val							Value to move cursor
-*/
-///< void MoveCaretLeft(size_t val);
-
-/**
 *	Set cursor position in the console window (0,0 = upper left corner) | If passed coordinate < 0 the given coord. will be unchanged
 *
 *	@param <int>x										Horizontal position. If x < 0 position will remain the samem on the axis
@@ -209,10 +207,6 @@ void SetForegroundColorUI(uint8_t r, uint8_t g, uint8_t b);
 *	@param <char*>text									Text to print
 */
 void PrintUI(char* text);
-
-
-///< DELETE
-void PreventResizeUI(void);
 
 //**************************************************
 //|	Visual elements								   |
@@ -459,6 +453,6 @@ size_t GetStrCharCount(char* str, char toCount);
 #define CUI_MENU_BUTTON_CL '}'							///< Menu button closing char
 #define CUI_MENU_EXIT_LABEL "Exit application"			///< Label next to menu bar exit button [F10]
 
-#define CUI_MENU_LABEL		"Code by: Mikuas Peter Marcell - SYZMBA"		///< Label on the console menu bar
+#define CUI_MENU_LABEL		"Code by: Mikulas Peter"		///< Label on the console menu bar
 
 #define CUI_POPUP_INPUT_WIDTH		30					///< PopUp window input width in characters
