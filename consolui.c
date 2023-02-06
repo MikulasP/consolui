@@ -63,13 +63,13 @@ void ModifiersUI(size_t argc, ...) {
     va_start(list, argc);
 
     size_t allocSize = (argc * 4 + 3) * sizeof(char);
-    char* args = malloc(allocSize);
+    char* args = (char*)malloc(allocSize);
     args[0] = '\0';
 
     for (int i = 0; i < argc - 1; i++)
-        sprintf(args, "%s%d;", args, va_arg(list, int));
+        sprintf_s(args, allocSize, "%s%d;", args, va_arg(list, int));
 
-    sprintf(args, "%s%dm", args, va_arg(list, int));
+    sprintf_s(args, allocSize, "%s%dm", args, va_arg(list, int));
 
     printf("%c[%s", CUI_ANSI_CHAR_ESC, args);
 
@@ -156,20 +156,6 @@ void PrintUI(char* text) {
     printf(text);
 }
 
-//DELETE
-void CALLBACK HandleWinEvent(HWINEVENTHOOK hook, DWORD event, HWND hwnd, LONG idObject, LONG idChild, DWORD dwEventThread, DWORD dwmsEventTime) {
-    SMALL_RECT rect = { 0, 0, 0, 0 };
-    rect.Top = rect.Left = 0;
-    rect.Bottom = 30;
-    rect.Right = 120;
-    SetConsoleWindowInfo(CreateConsoleScreenBuffer(GENERIC_READ, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL), TRUE, &rect);
-}
-
-//DELETE
-void PreventResizeUI(void) {
-    HWINEVENTHOOK resizeEventHook = SetWinEventHook(EVENT_CONSOLE_LAYOUT, EVENT_CONSOLE_LAYOUT, NULL, HandleWinEvent, 0, 0, WINEVENT_INCONTEXT);
-}
-
 // **************************************************
 // |	Visual elements								|
 // **************************************************
@@ -207,7 +193,7 @@ int PromptMenuScreenUI(char** menuItems, size_t itemCount, CUI_TEXTSTYLE* textSt
             DrawMenuItemsUI(menuItems, itemCount, buttonWidth, &textStyle, &screenStyle, startPointH, startPointV, selectedItem, screenInfo);
         }
         SetCaretPosUI(0, 0);
-        char input = getch();
+        char input = _getch();
         //
         // ----
         // Separate function later...?
@@ -221,7 +207,7 @@ int PromptMenuScreenUI(char** menuItems, size_t itemCount, CUI_TEXTSTYLE* textSt
             return selectedItem;
             //0 modifier - Key has multiple values
         case 0:
-            input = getch();
+            input = _getch();
             switch (input)
             {
                 //F10 key
@@ -235,7 +221,7 @@ int PromptMenuScreenUI(char** menuItems, size_t itemCount, CUI_TEXTSTYLE* textSt
             break;
             //-32 modifier - Key has multiple values
         case -32:
-            input = getch();
+            input = _getch();
             switch (input)
             {
                 //DOWN key
@@ -354,25 +340,6 @@ void DrawMenuScreenUI(char** menuItems, size_t itemCount, CUI_TEXTSTYLE* textSty
     printf("%s", CUI_MENU_LABEL);
 #endif
 
-
-    //Just for testing
-    //const char* logo = "███████╗██████╗  █████╗  ██████╗████████╗██╗   ██╗██████╗ ███████╗\n██╔════╝██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██║   ██║██╔══██╗██╔════╝\n█████╗  ██████╔╝███████║██║        ██║   ██║   ██║██████╔╝█████╗\n██╔══╝  ██╔══██╗██╔══██║██║        ██║   ██║   ██║██╔══██╗██╔══╝\n██║     ██║  ██║██║  ██║╚██████╗   ██║   ╚██████╔╝██║  ██║███████╗\n╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝\n";
-
-    char* logo = "___________                     __                        \n\\_   _____/___________    _____/  |_ __ _________   ____   \n |    __) \\_  __ \\__  \\ _/ ___\\   __\\  |  \\_  __ \\_/ __ \\ \n |     \\   |  | \\// __ \\\\  \\___|  | |  |  /|  | \\/\\  ___/ \n \\___  /   |__|  (____  /\\___  >__| |____/ |__|    \\___  >\n     \\/               \\/     \\/                        \\/ ";
-
-    CUI_SCREENSTYLE logoScreenStyle = *screenStyle;
-    logoScreenStyle.verticalAlignment = CUI_ALIGN_TOP;
-    logoScreenStyle.leftOffset = 0;
-    logoScreenStyle.lineShift = 0;
-
-    CUI_TEXTSTYLE logoTextStyle = *textStyle;
-    logoTextStyle.textBGColorR = logoScreenStyle.screenBGColorR;
-    logoTextStyle.textBGColorG = logoScreenStyle.screenBGColorG;
-    logoTextStyle.textBGColorB = logoScreenStyle.screenBGColorB;
-    logoTextStyle.textFGColorR = logoTextStyle.textFGColorG = logoTextStyle.textFGColorB = 255;
-
-    MultilinePrintUI(logo, '\n', &logoTextStyle, &logoScreenStyle, NULL);
-
 }
 
 //-
@@ -384,7 +351,7 @@ void DrawBackgroundColorUI(CUI_SCREENSTYLE style, CONSOLE_SCREEN_BUFFER_INFO* sc
     //Applying screen styles if there is any
     SetBackgroundColorUI(style.screenBGColorR, style.screenBGColorG, style.screenBGColorB);
 
-    char* voidFilledArray = malloc((GetConSizeXUI(&info) + 2) * sizeof(char));
+    char* voidFilledArray = (char*)malloc((GetConSizeXUI(&info) + 2) * sizeof(char));
     for (size_t x = 0; x <= GetConSizeXUI(&info); x++)
         voidFilledArray[x] = 32;
     voidFilledArray[GetConSizeXUI(&info) + 1] = '\0';
@@ -397,17 +364,18 @@ void DrawBackgroundColorUI(CUI_SCREENSTYLE style, CONSOLE_SCREEN_BUFFER_INFO* sc
     free(voidFilledArray);
 }
 
+//
 char* TempTextInput(char* title, char* label) {
     printf("\n%s", title);
 
     char buffer[150];
 
     printf("\n\n%s: ", label);
-    scanf(" %[^\n]", buffer);
+    scanf_s(" %[^\n]", buffer);
 
-    char* inputData = malloc((strlen(buffer) + 1) * sizeof(char));
+    char* inputData = (char*)malloc((strlen(buffer) + 1) * sizeof(char));
 
-    strcpy(inputData, buffer);
+    strcpy_s(inputData, ((strlen(buffer) + 1) * sizeof(char)), buffer);
 
     return inputData;
 }
@@ -434,7 +402,7 @@ char* TextInputPopUpUI(char* title, char* label, CUI_TEXTSTYLE* textStyle, CUI_S
     size_t startPointV = (GetConSizeYUI(&screenBufferInfo) - windowHeigth) / 2;     //Vertical start point
 
     //Buffer behind window
-    CHAR_INFO* hiddenPart = malloc((windowHeigth * windowLength) * sizeof(CHAR_INFO));
+    CHAR_INFO* hiddenPart = (CHAR_INFO*)malloc((windowHeigth * windowLength) * sizeof(CHAR_INFO));
     COORD hiddenPartSize = { (short)windowLength, (short)windowHeigth };
     COORD hiddenPartPos = { (short)startPointH, (short)startPointV };
     SMALL_RECT hiddenPartRect = { (short)startPointH, (short)startPointV, (short)(startPointH + windowLength), (short)(startPointV + windowHeigth) };     //Left, Top, Right, Bottom
@@ -445,9 +413,6 @@ char* TextInputPopUpUI(char* title, char* label, CUI_TEXTSTYLE* textStyle, CUI_S
     //PopUp
     SetCaretPosUI( (int)startPointH, (int)startPointV);
     //...
-
-    //Reprint behind window
-    //WriteConsoleOutput(GetStdHandle(NULL), hiddenPart, hiddenPartSize, hiddenPartPos, &hiddenPartRect);
 
     free(hiddenPart);
 }
